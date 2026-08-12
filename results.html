@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Results</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ============================================
+    NAVIGATION
+    ============================================ -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="brand">🎯 Soft Skills Advisor</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="quiz.html">Quiz</a></li>
+                <li><a href="results.html" class="active">Results</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ============================================
+    MAIN RESULTS CONTENT
+    ============================================ -->
+    <main>
+        <section class="results-container">
+            <div class="container">
+                <h1>📊 Your Soft Skills Profile</h1>
+                
+                <!-- Student Information -->
+                <div class="student-info" id="studentInfo">
+                    <!-- Will be populated from localStorage -->
+                </div>
+
+                <!-- Results Summary -->
+                <div class="results-summary" id="resultsSummary">
+                    <!-- Communication -->
+                    <div class="result-card">
+                        <h3>🗣️ Communication</h3>
+                        <span class="score" id="commScore">0%</span>
+                        <div class="score-bar">
+                            <div class="score-fill" id="commBar" style="width: 0%; background: #5B7B8A;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Critical Thinking -->
+                    <div class="result-card">
+                        <h3>🧠 Critical Thinking</h3>
+                        <span class="score" id="criticalScore">0%</span>
+                        <div class="score-bar">
+                            <div class="score-fill" id="criticalBar" style="width: 0%; background: #6B7B8D;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Time Management -->
+                    <div class="result-card">
+                        <h3>⏰ Time Management</h3>
+                        <span class="score" id="timeScore">0%</span>
+                        <div class="score-bar">
+                            <div class="score-fill" id="timeBar" style="width: 0%; background: #5D8A7A;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Leadership -->
+                    <div class="result-card">
+                        <h3>🌟 Leadership</h3>
+                        <span class="score" id="leadershipScore">0%</span>
+                        <div class="score-bar">
+                            <div class="score-fill" id="leadershipBar" style="width: 0%; background: #B8986A;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Radar Chart -->
+                <div class="chart-container">
+                    <h3>📈 Your Skills Radar Chart</h3>
+                    <canvas id="resultsChart" width="400" height="400"></canvas>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendations" id="recommendations">
+                    <h3>📋 Next Steps & Recommendations</h3>
+                    <div id="recommendationText">
+                        <!-- Will be dynamically generated -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="quiz.html" class="btn-secondary">🔄 Retake Quiz</a>
+                    <a href="contact.html" class="btn-primary">📩 Get Feedback</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================
+    FOOTER
+    ============================================ -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Soft Skills Advisor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ============================================
+    SCRIPTS
+    ============================================ -->
+    <script src="js/main.js"></script>
+    <script src="js/results.js"></script>
+    <script src="js/canvas.js"></script>
+</body>
+</html>

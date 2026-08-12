@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Skills Quiz</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ============================================
+    NAVIGATION
+    ============================================ -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="brand">🎯 Soft Skills Advisor</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="quiz.html" class="active">Quiz</a></li>
+                <li><a href="results.html">Results</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ============================================
+    MAIN QUIZ CONTENT
+    ============================================ -->
+    <main>
+        <section class="quiz-container">
+            <div class="container">
+                <!-- Quiz Header -->
+                <div class="quiz-header">
+                    <h1>Soft Skills Assessment</h1>
+                    <div class="quiz-meta">
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="timer-container">
+                            <span class="timer-label">⏱️ Time Remaining:</span>
+                            <span class="timer-display" id="timerDisplay">05:00</span>
+                        </div>
+                        <div class="question-counter">
+                            Question <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="question-card" id="questionCard">
+                    <h2 class="question-text" id="questionText">Loading question...</h2>
+                    
+                    <!-- Options Container -->
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Options will be dynamically inserted -->
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="quiz-navigation">
+                        <button class="btn-secondary" id="prevBtn" disabled>← Previous</button>
+                        <button class="btn-primary" id="nextBtn">Next →</button>
+                        <button class="btn-success" id="submitBtn" style="display: none;">✅ Submit Quiz</button>
+                    </div>
+                </div>
+
+                <!-- Interactive Media Section -->
+                <div class="media-section" id="mediaSection">
+                    <!-- Media will be dynamically inserted for special questions -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================
+    FOOTER
+    ============================================ -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Soft Skills Advisor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ============================================
+    SCRIPTS
+    ============================================ -->
+    <script src="js/main.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>
