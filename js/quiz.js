@@ -3,10 +3,13 @@
 // ============================================
 
 // ============================================
-// QUIZ DATA - 10 Questions with Categories
+// QUIZ DATA  Questions (10Regular + 3 Media)
 // ============================================
 
 const quizQuestions = [
+    // ============================================
+    // REGULAR QUESTIONS (1-10)
+    // ============================================
     {
         id: 1,
         category: 'Communication',
@@ -157,6 +160,71 @@ const quizQuestions = [
             'Time Management': 8,
             'Leadership': 2
         }
+    },
+    
+    // ============================================
+    // INTERACTIVE MEDIA QUESTION 1: IMAGE HOTSPOT
+    // ============================================
+    {
+        id: 11,
+        category: 'Communication',
+        question: 'Click the letter that represents your communication style:',
+        type: 'hotspot',
+        
+        image: 'assets/pic.jpg',
+        hotspots: [
+            { x: 20, y: 30, label: 'A', text: 'Presenting to large groups', score: { Communication: 10, Leadership: 8 } },
+            { x: 50, y: 20, label: 'B', text: 'One-on-one conversations', score: { Communication: 8, 'Critical Thinking': 5 } },
+            { x: 70, y: 50, label: 'C', text: 'Writing and documentation', score: { Communication: 6, 'Critical Thinking': 8 } },
+            { x: 40, y: 70, label: 'D', text: 'Leading team meetings', score: { Communication: 7, Leadership: 10 } }
+        ],
+        scores: {}
+    },
+    
+    // ============================================
+    // INTERACTIVE MEDIA QUESTION 2: AUDIO
+    // ============================================
+    {
+        id: 12,
+        category: 'Communication',
+        question: 'Listen to the audio carefully and select good answer:',
+        type: 'audio',
+       
+        audio: 'assets/audio.m4a',
+        options: [
+            'The speaker is confident and clear',
+            'the speaker"s voice is a bit nervous but well-prepared',
+            'The speaker is disorganized',
+            ' This speaker did not prepare and he is struggling to deliver'
+        ],
+        scores: {
+            'Communication': 10,
+            'Critical Thinking': 5
+        }
+    },
+    
+    // ============================================
+    // INTERACTIVE MEDIA QUESTION 3: VIDEO
+    // ============================================
+    {
+        id: 13,
+        category: 'Critical Thinking',
+        question: 'Watch the video and answer the question:',
+        type: 'video',
+       
+        video: 'assets/vid.mp4',
+        pauseAt: 120, // pause around 2 minutes
+        videoQuestion: 'What is being practiced in this video ?',
+        options: [
+            'Taking immediate action to resolve the issue',
+            'Consulting with the team to see how the conflict can be solved',
+            'only shouting to one another',
+            ' asking for off to recover from conflict'
+        ],
+        scores: {
+            'Critical Thinking': 10,
+            'Leadership': 5
+        }
     }
 ];
 
@@ -195,7 +263,7 @@ function loadQuestion(index) {
     // Update question text
     const questionText = document.getElementById('questionText');
     if (questionText) {
-        questionText.textContent = `Q${index + 1}: ${question.question}`;
+        questionText.textContent = 'Q' + (index + 1) + ': ' + question.question;
     }
     
     // Update question counter
@@ -208,33 +276,28 @@ function loadQuestion(index) {
     const progressBar = document.getElementById('progressBar');
     if (progressBar) {
         const progress = ((index + 1) / quizQuestions.length) * 100;
-        progressBar.style.width = `${progress}%`;
+        progressBar.style.width = progress + '%';
     }
     
-    // Generate options
-    const optionsContainer = document.getElementById('optionsContainer');
-    if (optionsContainer) {
-        optionsContainer.innerHTML = '';
-        
-        // Find selected answer for this question
-        const selectedAnswer = userAnswers[index];
-        
-        question.options.forEach((option, optionIndex) => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'option-item';
-            if (selectedAnswer === optionIndex) {
-                optionDiv.classList.add('selected');
-            }
-            
-            const letter = String.fromCharCode(65 + optionIndex);
-            optionDiv.innerHTML = `<span class="option-letter">${letter}.</span> ${option}`;
-            
-            optionDiv.addEventListener('click', function() {
-                selectOption(index, optionIndex);
-            });
-            
-            optionsContainer.appendChild(optionDiv);
-        });
+    // Clear media section
+    const mediaSection = document.getElementById('mediaSection');
+    if (mediaSection) mediaSection.innerHTML = '';
+    
+    // Check question type and render accordingly
+    if (question.type === 'hotspot') {
+        document.getElementById('optionsContainer').style.display = 'none';
+        renderHotspotQuestion(question);
+    } else if (question.type === 'audio') {
+        document.getElementById('optionsContainer').style.display = 'flex';
+        renderAudioQuestion(question);
+        generateOptions(question, index);
+    } else if (question.type === 'video') {
+        document.getElementById('optionsContainer').style.display = 'flex';
+        renderVideoQuestion(question);
+        generateOptions(question, index);
+    } else {
+        document.getElementById('optionsContainer').style.display = 'flex';
+        generateOptions(question, index);
     }
     
     // Update navigation buttons
@@ -242,21 +305,46 @@ function loadQuestion(index) {
 }
 
 /**
+ * Generate options for regular questions
+ */
+function generateOptions(question, index) {
+    const optionsContainer = document.getElementById('optionsContainer');
+    if (!optionsContainer) return;
+    
+    optionsContainer.innerHTML = '';
+    
+    const selectedAnswer = userAnswers[index];
+    
+    question.options.forEach(function(option, optionIndex) {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option-item';
+        if (selectedAnswer === optionIndex) {
+            optionDiv.classList.add('selected');
+        }
+        
+        const letter = String.fromCharCode(65 + optionIndex);
+        optionDiv.innerHTML = '<span class="option-letter">' + letter + '.</span> ' + option;
+        
+        optionDiv.addEventListener('click', function() {
+            selectOption(index, optionIndex);
+        });
+        
+        optionsContainer.appendChild(optionDiv);
+    });
+}
+
+/**
  * Select an option for a question
- * @param {number} questionIndex - The question index
- * @param {number} optionIndex - The selected option index
  */
 function selectOption(questionIndex, optionIndex) {
     if (quizSubmitted) return;
     
-    // Store the answer
     userAnswers[questionIndex] = optionIndex;
     
-    // Update UI
     const optionsContainer = document.getElementById('optionsContainer');
     if (optionsContainer) {
         const options = optionsContainer.querySelectorAll('.option-item');
-        options.forEach((opt, idx) => {
+        options.forEach(function(opt, idx) {
             if (idx === optionIndex) {
                 opt.classList.add('selected');
             } else {
@@ -265,19 +353,13 @@ function selectOption(questionIndex, optionIndex) {
         });
     }
     
-    // Update scores
     updateScores();
-    
-    // Enable next button
-    const nextBtn = document.getElementById('nextBtn');
-    if (nextBtn) nextBtn.disabled = false;
 }
 
 /**
  * Update scores based on answers
  */
 function updateScores() {
-    // Reset scores
     quizScore = {
         Communication: 0,
         'Critical Thinking': 0,
@@ -291,17 +373,28 @@ function updateScores() {
         Leadership: 0
     };
     
-    // Calculate scores
-    userAnswers.forEach((answerIndex, questionIndex) => {
-        if (answerIndex === undefined || answerIndex === null) return;
+    userAnswers.forEach(function(answer, questionIndex) {
+        if (answer === undefined || answer === null) return;
         
         const question = quizQuestions[questionIndex];
-        const scores = question.scores;
         
-        for (const category in scores) {
-            if (scores.hasOwnProperty(category)) {
-                quizScore[category] = (quizScore[category] || 0) + scores[category];
-                answerCount[category] = (answerCount[category] || 0) + 1;
+        // Handle hotspot answers (they have scores object)
+        if (typeof answer === 'object' && answer.scores) {
+            for (var category in answer.scores) {
+                if (answer.scores.hasOwnProperty(category)) {
+                    quizScore[category] = (quizScore[category] || 0) + answer.scores[category];
+                    answerCount[category] = (answerCount[category] || 0) + 1;
+                }
+            }
+            return;
+        }
+        
+        // Handle regular answers
+        const scores = question.scores;
+        for (var cat in scores) {
+            if (scores.hasOwnProperty(cat)) {
+                quizScore[cat] = (quizScore[cat] || 0) + scores[cat];
+                answerCount[cat] = (answerCount[cat] || 0) + 1;
             }
         }
     });
@@ -309,12 +402,10 @@ function updateScores() {
 
 /**
  * Get percentage for a category
- * @param {string} category - The category name
- * @returns {number} - Percentage score
  */
 function getCategoryPercentage(category) {
-    const maxScore = answerCount[category] * 10 || 1;
-    const score = quizScore[category] || 0;
+    var maxScore = answerCount[category] * 10 || 1;
+    var score = quizScore[category] || 0;
     return Math.round((score / maxScore) * 100);
 }
 
@@ -342,7 +433,6 @@ function goToNextQuestion() {
         currentQuestionIndex++;
         loadQuestion(currentQuestionIndex);
     } else {
-        // Last question, show submit button
         showSubmitButton();
     }
 }
@@ -351,8 +441,8 @@ function goToNextQuestion() {
  * Show the submit button
  */
 function showSubmitButton() {
-    const submitBtn = document.getElementById('submitBtn');
-    const nextBtn = document.getElementById('nextBtn');
+    var submitBtn = document.getElementById('submitBtn');
+    var nextBtn = document.getElementById('nextBtn');
     
     if (submitBtn) submitBtn.style.display = 'inline-block';
     if (nextBtn) nextBtn.style.display = 'none';
@@ -362,9 +452,9 @@ function showSubmitButton() {
  * Update navigation buttons
  */
 function updateNavigationButtons() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    var submitBtn = document.getElementById('submitBtn');
     
     if (prevBtn) {
         prevBtn.disabled = currentQuestionIndex === 0;
@@ -386,15 +476,15 @@ function updateNavigationButtons() {
  */
 function submitQuiz() {
     // Check if all questions are answered
-    const unanswered = [];
-    userAnswers.forEach((answer, index) => {
+    var unanswered = [];
+    userAnswers.forEach(function(answer, index) {
         if (answer === undefined || answer === null) {
             unanswered.push(index + 1);
         }
     });
     
     if (unanswered.length > 0) {
-        showNotification(`Please answer questions ${unanswered.join(', ')} before submitting`, 'error');
+        showNotification('Please answer questions ' + unanswered.join(', ') + ' before submitting', 'error');
         return;
     }
     
@@ -409,22 +499,178 @@ function submitQuiz() {
     updateScores();
     
     // Get percentages
-    const results = {
+    var results = {
         Communication: getCategoryPercentage('Communication'),
         'Critical Thinking': getCategoryPercentage('Critical Thinking'),
         'Time Management': getCategoryPercentage('Time Management'),
         Leadership: getCategoryPercentage('Leadership')
     };
     
-    // Save results to localStorage
     localStorage.setItem('quizResults', JSON.stringify(results));
     
-    showNotification('✅ Quiz submitted! Redirecting to results...', 'success');
+    showNotification('Quiz submitted! Redirecting to results...', 'success');
     
-    // Redirect to results page
-    setTimeout(() => {
+    setTimeout(function() {
         window.location.href = 'results.html';
     }, 1500);
+}
+
+// ============================================
+// MEDIA RENDER FUNCTIONS
+// ============================================
+
+/**
+ * Render a hotspot question
+ */
+function renderHotspotQuestion(question) {
+    var container = document.getElementById('mediaSection');
+    if (!container) return;
+    
+    var hotspotsHTML = '';
+    question.hotspots.forEach(function(spot, index) {
+        hotspotsHTML += `
+            <div class="hotspot" 
+                 id="hotspot-${index}"
+                 style="left: ${spot.x}%; top: ${spot.y}%;"
+                 data-index="${index}"
+                 data-score='${JSON.stringify(spot.score)}'>
+                ${spot.label}
+            </div>
+        `;
+    });
+    
+    container.innerHTML = `
+        <div class="media-container">
+            <h3>Click on the area that best describes you</h3>
+            <div class="hotspot-container" id="hotspotContainer">
+                <img src="${question.image}" alt="Interactive image" style="max-width: 100%; border-radius: 8px;">
+                ${hotspotsHTML}
+            </div>
+            <p id="hotspotFeedback" style="margin-top: 0.5rem; font-weight: 600; color: var(--text-medium);">
+                Click a hotspot to select your answer
+            </p>
+        </div>
+    `;
+    
+    question.hotspots.forEach(function(spot, index) {
+        var el = document.getElementById('hotspot-' + index);
+        if (el) {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('.hotspot').forEach(function(h) {
+                    h.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                var questionIndex = currentQuestionIndex;
+                userAnswers[questionIndex] = {
+                    type: 'hotspot',
+                    selected: index,
+                    scores: spot.score
+                };
+                
+                document.getElementById('hotspotFeedback').textContent = 'Selected: ' + spot.text;
+                document.getElementById('hotspotFeedback').style.color = '#5D8A7A';
+                
+                updateScores();
+            });
+        }
+    });
+}
+
+/**
+ * Render an audio question
+ */
+function renderAudioQuestion(question) {
+    var container = document.getElementById('mediaSection');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="media-container">
+            <h3>Listen to the audio clip</h3>
+            <audio id="audioPlayer" src="${question.audio}"></audio>
+            <div class="media-controls">
+                <button class="play-btn" id="playAudio">Play</button>
+                <button class="pause-btn" id="pauseAudio">Pause</button>
+                <button class="replay-btn" id="replayAudio">Replay</button>
+            </div>
+            <div id="audioStatus" style="margin-top: 0.5rem; font-weight: 600; color: var(--text-medium);">
+                Click play to listen
+            </div>
+        </div>
+    `;
+    
+    var audio = document.getElementById('audioPlayer');
+    var status = document.getElementById('audioStatus');
+    
+    document.getElementById('playAudio').addEventListener('click', function() {
+        audio.play();
+        status.textContent = 'Playing...';
+        status.style.color = '#5D8A7A';
+    });
+    
+    document.getElementById('pauseAudio').addEventListener('click', function() {
+        audio.pause();
+        status.textContent = 'Paused';
+        status.style.color = '#B8986A';
+    });
+    
+    document.getElementById('replayAudio').addEventListener('click', function() {
+        audio.currentTime = 0;
+        audio.play();
+        status.textContent = 'Replaying...';
+        status.style.color = '#5B7B8A';
+    });
+    
+    audio.addEventListener('ended', function() {
+        status.textContent = 'Audio finished - Select your answer below';
+        status.style.color = '#5D8A7A';
+    });
+}
+
+/**
+ * Render a video question
+ */
+function renderVideoQuestion(question) {
+    var container = document.getElementById('mediaSection');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="media-container">
+            <h3>Watch the video (it will pause automatically)</h3>
+            <video id="videoPlayer" src="${question.video}" controls style="width: 100%; max-width: 600px; border-radius: 8px;"></video>
+            <div id="videoStatus" style="margin-top: 0.5rem; font-weight: 600; color: var(--text-medium);">
+                Watch the video, it will pause at ${question.pauseAt} seconds
+            </div>
+            <div id="videoQuestionContainer" style="display: none; margin-top: 1rem;">
+                <p style="font-weight: 600; color: var(--text-dark);">${question.videoQuestion}</p>
+            </div>
+        </div>
+    `;
+    
+    var video = document.getElementById('videoPlayer');
+    var status = document.getElementById('videoStatus');
+    var questionContainer = document.getElementById('videoQuestionContainer');
+    var hasPaused = false;
+    
+    video.addEventListener('timeupdate', function() {
+        if (this.currentTime >= question.pauseAt && !hasPaused) {
+            this.pause();
+            hasPaused = true;
+            status.textContent = 'Video paused - Answer the question below';
+            status.style.color = '#C47A7A';
+            questionContainer.style.display = 'block';
+            showNotification('Video paused! Answer the question below.', 'info');
+        }
+    });
+    
+    video.addEventListener('play', function() {
+        if (hasPaused && this.currentTime >= question.pauseAt) {
+            hasPaused = false;
+            questionContainer.style.display = 'none';
+            status.textContent = 'Watching again...';
+            status.style.color = '#5B7B8A';
+        }
+    });
 }
 
 // ============================================
@@ -432,27 +678,23 @@ function submitQuiz() {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if on quiz page
     if (document.getElementById('questionCard')) {
-        // Check if student data exists
-        const studentData = localStorage.getItem('studentData');
+        var studentData = localStorage.getItem('studentData');
         if (!studentData) {
             showNotification('Please register first', 'error');
-            setTimeout(() => {
+            setTimeout(function() {
                 window.location.href = 'index.html';
             }, 1500);
             return;
         }
         
-        // Initialize quiz
         userAnswers = new Array(quizQuestions.length);
         currentQuestionIndex = 0;
         loadQuestion(currentQuestionIndex);
         
-        // Setup navigation buttons
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
+        var prevBtn = document.getElementById('prevBtn');
+        var nextBtn = document.getElementById('nextBtn');
+        var submitBtn = document.getElementById('submitBtn');
         
         if (prevBtn) {
             prevBtn.addEventListener('click', goToPreviousQuestion);
@@ -466,5 +708,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Expose submitQuiz globally for timer
 window.submitQuiz = submitQuiz;
