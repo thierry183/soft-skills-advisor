@@ -13,11 +13,11 @@ const regexPatterns = {
     // Full name: Letters and spaces only, 2-50 chars
     fullName: /^[a-zA-Z\s]{2,50}$/,
     
-    // Student ID: BSE-YYYY-NNN
-    studentId: /^[A-Z]{3,4}-\d{4}-\d{3}$/,
+    // Student ID: SE-YYYY-NNN
+    studentId: /^[a-zA-Z]{3,4}-\d{4}-\d{3}$/,
     
-    // Phone: +230 5XXX XXXX
-    phoneNumber: /^\+230\s?[5-8]\d{3}\s?\d{4}$/,
+    // Phone: +23057777777
+    phoneNumber: /^\+[0-9][0-9][0-9]\s?[5-9]\d{3}\s?\d{4}$/,
     
     // General email
     contactEmail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -50,12 +50,12 @@ function validateField(input, pattern, errorMessage) {
     
     if (isValid) {
         input.className = 'is-valid';
-        errorElement.textContent = '✅ Valid';
+        errorElement.textContent = 'Valid';
         errorElement.style.color = '#5D8A7A';
     } else {
         input.className = 'is-invalid';
         errorElement.textContent = errorMessage || 'Invalid input';
-        errorElement.style.color = '#C47A7A';
+        errorElement.style.color = '#2C3E50';
     }
     
     return isValid;
@@ -129,13 +129,13 @@ function setupRegistrationValidation() {
             };
             localStorage.setItem('studentData', JSON.stringify(studentData));
             
-            showNotification('✅ Registration successful! Redirecting to quiz...', 'success');
+            showNotification('Registration successful! Redirecting to quiz...', 'success');
             
             setTimeout(() => {
                 window.location.href = 'quiz.html';
             }, 1500);
         } else {
-            showNotification('❌ Please fix all errors before continuing', 'error');
+            showNotification('Please fix all errors before continuing', 'error');
         }
     });
 }
@@ -200,7 +200,7 @@ function setupContactValidation() {
         const isMessageValid = validateField(contactMessage, regexPatterns.message, 'At least 10 characters');
         
         if (isNameValid && isEmailValid && isSubjectValid && isMessageValid) {
-            showNotification('✅ Thank you for your feedback!', 'success');
+            showNotification('Thank you for your feedback!', 'success');
             form.reset();
             
             [contactName, contactEmail, contactSubject, contactMessage].forEach(input => {
@@ -211,7 +211,7 @@ function setupContactValidation() {
                 }
             });
         } else {
-            showNotification('❌ Please fix all errors before submitting', 'error');
+            showNotification('Please fix all errors before submitting', 'error');
         }
     });
 }

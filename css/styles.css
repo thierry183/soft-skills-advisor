@@ -1,7 +1,9 @@
-
+/* ============================================
+   GREY AND WHITE THEME - Clean Version
+   ============================================ */
 
 /* ============================================
-   GLOBAL RESET & VARIABLES
+   GLOBAL RESET AND VARIABLES
    ============================================ */
 
 * {
@@ -12,34 +14,34 @@
 
 :root {
     /* Primary Colors - Grey Scale */
-    --primary: #5B7B8A;          /* Soft blue-grey accent */
-    --primary-dark: #4A6A7A;     /* Darker accent */
-    --primary-light: #7B9BAA;    /* Lighter accent */
+    --primary: #5B7B8A;
+    --primary-dark: #4A6A7A;
+    --primary-light: #7B9BAA;
     
     /* Greys */
-    --grey-dark: #2C3E50;        /* Darkest grey */
-    --grey-medium: #6B7B8D;      /* Mid grey */
-    --grey-light: #A8B8C8;       /* Light grey */
-    --grey-lighter: #D5DDE5;     /* Very light grey */
-    --grey-bg: #E8ECEF;          /* Background grey */
-    --grey-border: #D0D8E0;      /* Border grey */
+    --grey-dark: #2C3E50;
+    --grey-medium: #6B7B8D;
+    --grey-light: #A8B8C8;
+    --grey-lighter: #D5DDE5;
+    --grey-bg: #E8ECEF;
+    --grey-border: #D0D8E0;
     
     /* White */
     --white: #FFFFFF;
     --white-smoke: #F5F7F9;
     
     /* Text Colors */
-    --text-dark: #2C3E50;        /* Dark text */
-    --text-medium: #4A5A6A;      /* Medium text */
-    --text-light: #8A9AA8;       /* Light text */
+    --text-dark: #2C3E50;
+    --text-medium: #4A5A6A;
+    --text-light: #8A9AA8;
     --text-white: #FFFFFF;
     
     /* Status Colors */
-    --success: #5D8A7A;          /* Muted green */
+    --success: #5D8A7A;
     --success-bg: #E8F0ED;
-    --error: #C47A7A;            /* Muted red */
+    --error: #C47A7A;
     --error-bg: #F5ECEC;
-    --warning: #B8986A;          /* Muted orange */
+    --warning: #B8986A;
     --warning-bg: #F5F0E8;
     
     /* Spacing */
@@ -52,7 +54,7 @@
     --radius: 8px;
     --radius-lg: 12px;
     
-    /* Shadows - Grey based */
+    /* Shadows */
     --shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
     --shadow-hover: 0 4px 16px rgba(44, 62, 80, 0.12);
     --shadow-lg: 0 8px 32px rgba(44, 62, 80, 0.15);
@@ -62,7 +64,7 @@
 }
 
 /* ============================================
-   TYPOGRAPHY & BODY
+   TYPOGRAPHY AND BODY
    ============================================ */
 
 body {
@@ -102,10 +104,6 @@ body {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--grey-dark);
-}
-
-.nav-brand .brand span {
-    color: var(--primary);
 }
 
 .nav-menu {
@@ -184,7 +182,7 @@ body {
 }
 
 /* ============================================
-   HERO SECTION - Dark Grey
+   HERO SECTION
    ============================================ */
 
 .hero {
@@ -257,6 +255,8 @@ body {
 
 .feature-card .icon {
     font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
     display: block;
     margin-bottom: var(--spacing-xs);
 }
@@ -272,7 +272,7 @@ body {
 }
 
 /* ============================================
-   FORMS - Grey & White
+   FORMS
    ============================================ */
 
 .registration,
@@ -347,16 +347,29 @@ form {
     background-color: var(--error-bg);
 }
 
+/* ============================================
+   ERROR MESSAGE - DARK GREY AND READABLE
+   ============================================ */
+
 .error-message {
     display: block;
     margin-top: var(--spacing-xs);
-    color: var(--error);
+    color: var(--grey-dark);
     font-size: 0.875rem;
     min-height: 1.5rem;
+    font-weight: 500;
+}
+
+.error-message.valid {
+    color: var(--success);
+}
+
+.form-group input.is-invalid + .error-message {
+    color: var(--grey-dark);
 }
 
 /* ============================================
-   QUIZ - Grey Theme
+   QUIZ
    ============================================ */
 
 .quiz-container {
@@ -479,7 +492,7 @@ form {
 }
 
 /* ============================================
-   RESULTS - Grey Theme
+   RESULTS
    ============================================ */
 
 .results-container {
@@ -617,7 +630,7 @@ form {
 }
 
 /* ============================================
-   MEDIA SECTION - Grey Theme
+   MEDIA SECTION
    ============================================ */
 
 .media-section {
@@ -736,7 +749,7 @@ form {
 }
 
 /* ============================================
-   CONTACT - Grey Theme
+   CONTACT
    ============================================ */
 
 .contact-container {
@@ -778,7 +791,7 @@ form {
 }
 
 /* ============================================
-   FOOTER - Dark Grey
+   FOOTER
    ============================================ */
 
 footer {
@@ -794,7 +807,7 @@ footer p {
 }
 
 /* ============================================
-   NOTIFICATIONS - Grey Theme
+   NOTIFICATIONS - WITH DARK GREY BORDER
    ============================================ */
 
 .notification {
@@ -808,21 +821,30 @@ footer p {
     z-index: 9999;
     animation: slideIn 0.3s ease;
     box-shadow: var(--shadow-lg);
+    border: 3px solid var(--grey-dark);
+    max-width: 400px;
+    min-width: 250px;
 }
 
 .notification-success {
     background: var(--success);
+    border-color: var(--grey-dark);
 }
 
 .notification-error {
     background: var(--error);
+    border-color: var(--grey-dark);
 }
 
 .notification-info {
     background: var(--primary);
+    border-color: var(--grey-dark);
 }
 
-/* Animations */
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -915,5 +937,14 @@ footer p {
         width: 24px;
         height: 24px;
         font-size: 0.6rem;
+    }
+    
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+        min-width: auto;
     }
 }

@@ -69,7 +69,7 @@ function stopTimer() {
  * Handle timer expiration
  */
 function handleTimerExpired() {
-    showNotification('⏰ Time is up! Auto-submitting your quiz...', 'error');
+    showNotification('Time is up! Auto-submitting your quiz...', 'error');
     
     // Lock quiz controls
     const options = document.querySelectorAll('.option-item');
