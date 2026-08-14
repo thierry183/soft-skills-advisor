@@ -6,26 +6,26 @@
 // RECOMMENDATION DATA
 // ============================================
 
-const recommendations = {
+var recommendations = {
     Communication: {
-        high: '🌟 Excellent! You have strong communication skills. Consider roles in: Team Leadership, Project Management, Client Relations, or Teaching.',
-        medium: '📈 Good communication skills. Focus on: Active listening, Public speaking practice, and Written communication workshops.',
-        low: '📚 Develop your communication skills by: Joining a debate club, Practicing presentations, Writing daily journals, and Seeking feedback on your communication style.'
+        high: 'Excellent! You have strong communication skills. Consider roles in: Team Leadership, Project Management, Client Relations, or Teaching.',
+        medium: 'Good communication skills. Focus on: Active listening, Public speaking practice, and Written communication workshops.',
+        low: 'Develop your communication skills by: Joining a debate club, Practicing presentations, Writing daily journals, and Seeking feedback on your communication style.'
     },
     'Critical Thinking': {
-        high: '🧠 Outstanding critical thinker! You excel at: Problem Analysis, Strategic Planning, Research, and Decision Making.',
-        medium: '💡 Solid critical thinking foundation. Work on: Analyzing case studies, Playing strategy games, and Practicing root cause analysis.',
-        low: '📖 Strengthen critical thinking by: Reading diverse perspectives, Solving puzzles and riddles, Asking "why" more often, and Learning to question assumptions.'
+        high: 'Outstanding critical thinker! You excel at: Problem Analysis, Strategic Planning, Research, and Decision Making.',
+        medium: 'Solid critical thinking foundation. Work on: Analyzing case studies, Playing strategy games, and Practicing root cause analysis.',
+        low: 'Strengthen critical thinking by: Reading diverse perspectives, Solving puzzles and riddles, Asking "why" more often, and Learning to question assumptions.'
     },
     'Time Management': {
-        high: '⏰ Excellent time manager! You\'re ready for: Project Management, Agile Development, and Leadership roles.',
-        medium: '📅 Good time management habits. Try: Using time-blocking techniques, Setting SMART goals, and Using productivity apps like Trello or Asana.',
-        low: '🔄 Build time management skills: Start with to-do lists, Use the Pomodoro technique, Set daily priorities, and Learn to say "no" to non-essential tasks.'
+        high: 'Excellent time manager! You\'re ready for: Project Management, Agile Development, and Leadership roles.',
+        medium: 'Good time management habits. Try: Using time-blocking techniques, Setting SMART goals, and Using productivity apps like Trello or Asana.',
+        low: 'Build time management skills: Start with to-do lists, Use the Pomodoro technique, Set daily priorities, and Learn to say "no" to non-essential tasks.'
     },
     Leadership: {
-        high: '👑 Natural leader! You\'re equipped for: Management roles, Team Leadership, Mentoring, and Strategic Planning.',
-        medium: '🤝 Developing leadership skills. Focus on: Taking initiative, Delegating effectively, Building trust, and Inspiring others through your actions.',
-        low: '🚀 Start your leadership journey: Volunteer for team projects, Lead small groups, Read leadership books, and Seek mentorship from experienced leaders.'
+        high: 'Natural leader! You\'re equipped for: Management roles, Team Leadership, Mentoring, and Strategic Planning.',
+        medium: 'Developing leadership skills. Focus on: Taking initiative, Delegating effectively, Building trust, and Inspiring others through your actions.',
+        low: 'Start your leadership journey: Volunteer for team projects, Lead small groups, Read leadership books, and Seek mentorship from experienced leaders.'
     }
 };
 
@@ -34,13 +34,13 @@ const recommendations = {
 // ============================================
 
 function getResults() {
-    const resultsData = localStorage.getItem('quizResults');
+    var resultsData = localStorage.getItem('quizResults');
     if (!resultsData) return null;
     return JSON.parse(resultsData);
 }
 
 function getStudentData() {
-    const studentData = localStorage.getItem('studentData');
+    var studentData = localStorage.getItem('studentData');
     if (!studentData) return null;
     return JSON.parse(studentData);
 }
@@ -50,7 +50,7 @@ function getStudentData() {
 // ============================================
 
 function displayResults() {
-    const results = getResults();
+    var results = getResults();
     if (!results) {
         document.querySelector('.results-container').innerHTML = `
             <div class="container">
@@ -64,57 +64,53 @@ function displayResults() {
         return;
     }
     
-    // Display student info
-    const student = getStudentData();
-    const studentInfo = document.getElementById('studentInfo');
+    var student = getStudentData();
+    var studentInfo = document.getElementById('studentInfo');
     if (studentInfo && student) {
         studentInfo.innerHTML = `
-            <p><strong>👤 Student:</strong> ${student.fullName}</p>
-            <p><strong>📧 Email:</strong> ${student.studentEmail}</p>
-            <p><strong>🆔 ID:</strong> ${student.studentId}</p>
+            <p><strong>Student:</strong> ${student.fullName}</p>
+            <p><strong>Email:</strong> ${student.studentEmail}</p>
+            <p><strong>ID:</strong> ${student.studentId}</p>
         `;
     }
     
-    // Update scores
-    const categories = ['Communication', 'Critical Thinking', 'Time Management', 'Leadership'];
-    const colors = ['#5B7B8A', '#6B7B8D', '#5D8A7A', '#B8986A'];
+    var categories = ['Communication', 'Critical Thinking', 'Time Management', 'Leadership'];
+    var colors = ['#5B7B8A', '#6B7B8D', '#5D8A7A', '#B8986A'];
     
-    const scoreIds = {
+    var scoreIds = {
         'Communication': 'commScore',
         'Critical Thinking': 'criticalScore',
         'Time Management': 'timeScore',
         'Leadership': 'leadershipScore'
     };
     
-    const barIds = {
+    var barIds = {
         'Communication': 'commBar',
         'Critical Thinking': 'criticalBar',
         'Time Management': 'timeBar',
         'Leadership': 'leadershipBar'
     };
     
-    categories.forEach((category, index) => {
-        const score = results[category] || 0;
-        const scoreId = scoreIds[category];
-        const barId = barIds[category];
+    categories.forEach(function(category, index) {
+        var score = results[category] || 0;
+        var scoreId = scoreIds[category];
+        var barId = barIds[category];
         
-        const scoreEl = document.getElementById(scoreId);
-        const barEl = document.getElementById(barId);
+        var scoreEl = document.getElementById(scoreId);
+        var barEl = document.getElementById(barId);
         
         if (scoreEl) {
-            scoreEl.textContent = `${score}%`;
+            scoreEl.textContent = score + '%';
             scoreEl.style.color = colors[index];
         }
         if (barEl) {
-            barEl.style.width = `${score}%`;
+            barEl.style.width = score + '%';
             barEl.style.background = colors[index];
         }
     });
     
-    // Generate recommendations
     generateRecommendations(results);
     
-    // Draw canvas chart (will be done by canvas.js)
     if (typeof drawRadarChart === 'function') {
         setTimeout(drawRadarChart, 300);
     }
@@ -125,67 +121,63 @@ function displayResults() {
 // ============================================
 
 function generateRecommendations(results) {
-    const container = document.getElementById('recommendationText');
+    var container = document.getElementById('recommendationText');
     if (!container) return;
     
-    let html = '';
+    var html = '';
     
-    // Sort categories by score (highest first)
-    const sortedCategories = Object.keys(results).sort((a, b) => results[b] - results[a]);
+    var sortedCategories = Object.keys(results).sort(function(a, b) {
+        return results[b] - results[a];
+    });
     
-    // Get top and bottom categories
-    const topCategory = sortedCategories[0];
-    const bottomCategory = sortedCategories[sortedCategories.length - 1];
+    var topCategory = sortedCategories[0];
+    var bottomCategory = sortedCategories[sortedCategories.length - 1];
     
-    // Overall assessment
-    const avgScore = Object.values(results).reduce((a, b) => a + b, 0) / Object.keys(results).length;
+    var avgScore = Object.values(results).reduce(function(a, b) {
+        return a + b;
+    }, 0) / Object.keys(results).length;
     
-    let overallMessage = '';
+    var overallMessage = '';
     if (avgScore >= 80) {
-        overallMessage = '🌟 Outstanding overall! You have a well-rounded skillset.';
+        overallMessage = 'Outstanding overall! You have a well-rounded skillset.';
     } else if (avgScore >= 60) {
-        overallMessage = '📈 Good foundation! You have clear strengths to build on.';
+        overallMessage = 'Good foundation! You have clear strengths to build on.';
     } else {
-        overallMessage = '📚 Great starting point! Focus on developing your skills systematically.';
+        overallMessage = 'Great starting point! Focus on developing your skills systematically.';
     }
     
-    html += `<div class="recommendation-item"><strong>📊 Overall Assessment:</strong> ${overallMessage}</div>`;
+    html += '<div class="recommendation-item"><strong>Overall Assessment:</strong> ' + overallMessage + '</div>';
     
-    // Top strength
     if (topCategory && results[topCategory] >= 60) {
-        const topRec = recommendations[topCategory];
-        const level = results[topCategory] >= 80 ? 'high' : results[topCategory] >= 60 ? 'medium' : 'low';
-        html += `<div class="recommendation-item"><strong>💪 Your Greatest Strength (${topCategory}):</strong> ${topRec[level]}</div>`;
+        var topRec = recommendations[topCategory];
+        var level = results[topCategory] >= 80 ? 'high' : results[topCategory] >= 60 ? 'medium' : 'low';
+        html += '<div class="recommendation-item"><strong>Your Greatest Strength (' + topCategory + '):</strong> ' + topRec[level] + '</div>';
     }
     
-    // Area for improvement
     if (bottomCategory && results[bottomCategory] < 60) {
-        const bottomRec = recommendations[bottomCategory];
-        const level = results[bottomCategory] >= 40 ? 'medium' : 'low';
-        html += `<div class="recommendation-item"><strong>🎯 Focus Area (${bottomCategory}):</strong> ${bottomRec[level]}</div>`;
+        var bottomRec = recommendations[bottomCategory];
+        var level = results[bottomCategory] >= 40 ? 'medium' : 'low';
+        html += '<div class="recommendation-item"><strong>Focus Area (' + bottomCategory + '):</strong> ' + bottomRec[level] + '</div>';
     }
     
-    // All categories recommendations
-    html += '<div class="recommendation-item"><strong>📋 Detailed Breakdown:</strong></div>';
+    html += '<div class="recommendation-item"><strong>Detailed Breakdown:</strong></div>';
     
-    Object.keys(results).forEach(category => {
-        const score = results[category];
-        const rec = recommendations[category];
-        const level = score >= 80 ? 'high' : score >= 60 ? 'medium' : 'low';
-        const emoji = score >= 80 ? '🌟' : score >= 60 ? '📈' : '📚';
+    Object.keys(results).forEach(function(category) {
+        var score = results[category];
+        var rec = recommendations[category];
+        var level = score >= 80 ? 'high' : score >= 60 ? 'medium' : 'low';
         
         html += `
             <div class="recommendation-item">
-                <strong>${emoji} ${category}:</strong> ${score}% 
+                <strong>${category}:</strong> ${score}% 
                 <br>${rec[level]}
             </div>
         `;
     });
     
-    // Next steps
     html += `
         <div class="recommendation-item" style="border-left-color: #6B7B8D;">
-            <strong>🚀 Recommended Next Steps:</strong>
+            <strong>Recommended Next Steps:</strong>
             <ol>
                 <li>Focus on developing your <strong>${bottomCategory}</strong> skills</li>
                 <li>Leverage your strength in <strong>${topCategory}</strong> in your projects</li>

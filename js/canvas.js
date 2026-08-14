@@ -6,16 +6,15 @@
  * Draw a radar/spider chart on canvas
  */
 function drawRadarChart() {
-    const canvas = document.getElementById('resultsChart');
+    var canvas = document.getElementById('resultsChart');
     if (!canvas) {
         console.warn('Canvas element not found');
         return;
     }
     
-    const ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     
-    // Get results from localStorage
-    const resultsData = localStorage.getItem('quizResults');
+    var resultsData = localStorage.getItem('quizResults');
     if (!resultsData) {
         ctx.fillStyle = '#8A9AA8';
         ctx.font = '16px sans-serif';
@@ -25,40 +24,32 @@ function drawRadarChart() {
         return;
     }
     
-    const results = JSON.parse(resultsData);
+    var results = JSON.parse(resultsData);
     
-    // ============================================
-    // CHART CONFIGURATION
-    // ============================================
+    // Chart configuration
+    var categories = ['Communication', 'Critical Thinking', 'Time Management', 'Leadership'];
+    var values = categories.map(function(cat) {
+        return (results[cat] || 0) / 100;
+    });
+    var colors = ['#5B7B8A', '#6B7B8D', '#5D8A7A', '#B8986A'];
     
-    const categories = ['Communication', 'Critical Thinking', 'Time Management', 'Leadership'];
-    const values = categories.map(cat => (results[cat] || 0) / 100);
-    const colors = ['#5B7B8A', '#6B7B8D', '#5D8A7A', '#B8986A'];
-    const fillColor = 'rgba(91, 123, 138, 0.2)';
-    const strokeColor = '#5B7B8A';
+    var width = canvas.width;
+    var height = canvas.height;
+    var centerX = width / 2;
+    var centerY = height / 2;
+    var radius = Math.min(width, height) / 2 - 50;
+    var levels = 5;
     
-    // Canvas dimensions
-    const width = canvas.width;
-    const height = canvas.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const radius = Math.min(width, height) / 2 - 50;
-    const levels = 5;
-    
-    // Clear canvas
     ctx.clearRect(0, 0, width, height);
     
-    // ============================================
-    // DRAW BACKGROUND GRID
-    // ============================================
-    
-    for (let level = 1; level <= levels; level++) {
-        const r = (radius / levels) * level;
+    // Draw background grid
+    for (var level = 1; level <= levels; level++) {
+        var r = (radius / levels) * level;
         ctx.beginPath();
-        for (let i = 0; i < categories.length; i++) {
-            const angle = (Math.PI * 2 * i / categories.length) - Math.PI / 2;
-            const x = centerX + r * Math.cos(angle);
-            const y = centerY + r * Math.sin(angle);
+        for (var i = 0; i < categories.length; i++) {
+            var angle = (Math.PI * 2 * i / categories.length) - Math.PI / 2;
+            var x = centerX + r * Math.cos(angle);
+            var y = centerY + r * Math.sin(angle);
             i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
         ctx.closePath();
@@ -66,160 +57,131 @@ function drawRadarChart() {
         ctx.lineWidth = 1;
         ctx.stroke();
         
-        // Draw percentage labels
         ctx.fillStyle = '#8A9AA8';
         ctx.font = '9px sans-serif';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
-        const labelX = centerX + r * Math.cos(-Math.PI / 2);
-        const labelY = centerY + r * Math.sin(-Math.PI / 2);
-        ctx.fillText(`${Math.round((r / radius) * 100)}%`, labelX - 5, labelY);
+        var labelX = centerX + r * Math.cos(-Math.PI / 2);
+        var labelY = centerY + r * Math.sin(-Math.PI / 2);
+        ctx.fillText(Math.round((r / radius) * 100) + '%', labelX - 5, labelY);
     }
     
-    // ============================================
-    // DRAW AXES WITH CATEGORY LABELS
-    // ============================================
-    
-    for (let i = 0; i < categories.length; i++) {
-        const angle = (Math.PI * 2 * i / categories.length) - Math.PI / 2;
+    // Draw axes with labels
+    for (var j = 0; j < categories.length; j++) {
+        var angle2 = (Math.PI * 2 * j / categories.length) - Math.PI / 2;
         
-        // Draw axis line
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
-        ctx.lineTo(centerX + radius * Math.cos(angle), centerY + radius * Math.sin(angle));
+        ctx.lineTo(centerX + radius * Math.cos(angle2), centerY + radius * Math.sin(angle2));
         ctx.strokeStyle = '#D0D8E0';
         ctx.lineWidth = 1.5;
         ctx.stroke();
         
-        // Draw category labels
-        const labelRadius = radius + 25;
-        const labelX = centerX + labelRadius * Math.cos(angle);
-        const labelY = centerY + labelRadius * Math.sin(angle);
+        var labelRadius = radius + 25;
+        var labelX = centerX + labelRadius * Math.cos(angle2);
+        var labelY = centerY + labelRadius * Math.sin(angle2);
         ctx.fillStyle = '#2C3E50';
         ctx.font = 'bold 11px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
-        // Adjust text position for better readability
-        let offsetX = 0, offsetY = 0;
-        if (i === 0) { offsetY = -15; }
-        else if (i === 1) { offsetX = 15; }
-        else if (i === 2) { offsetY = 15; }
-        else if (i === 3) { offsetX = -15; }
+        var offsetX = 0, offsetY = 0;
+        if (j === 0) { offsetY = -15; }
+        else if (j === 1) { offsetX = 15; }
+        else if (j === 2) { offsetY = 15; }
+        else if (j === 3) { offsetX = -15; }
         
-        ctx.fillText(categories[i], labelX + offsetX, labelY + offsetY);
+        ctx.fillText(categories[j], labelX + offsetX, labelY + offsetY);
     }
     
-    // ============================================
-    // DRAW DATA POLYGON
-    // ============================================
-    
+    // Draw data polygon
     ctx.beginPath();
-    for (let i = 0; i < categories.length; i++) {
-        const value = values[i] || 0;
-        const r = radius * Math.min(value, 1);
-        const angle = (Math.PI * 2 * i / categories.length) - Math.PI / 2;
-        const x = centerX + r * Math.cos(angle);
-        const y = centerY + r * Math.sin(angle);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    for (var k = 0; k < categories.length; k++) {
+        var value = values[k] || 0;
+        var r2 = radius * Math.min(value, 1);
+        var angle3 = (Math.PI * 2 * k / categories.length) - Math.PI / 2;
+        var x2 = centerX + r2 * Math.cos(angle3);
+        var y2 = centerY + r2 * Math.sin(angle3);
+        k === 0 ? ctx.moveTo(x2, y2) : ctx.lineTo(x2, y2);
     }
     ctx.closePath();
     
-    // Fill with gradient
-    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+    var gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
     gradient.addColorStop(0, 'rgba(91, 123, 138, 0.3)');
     gradient.addColorStop(1, 'rgba(91, 123, 138, 0.08)');
     ctx.fillStyle = gradient;
     ctx.fill();
     
-    // Stroke the polygon
-    ctx.strokeStyle = strokeColor;
+    ctx.strokeStyle = '#5B7B8A';
     ctx.lineWidth = 2.5;
     ctx.stroke();
     
-    // ============================================
-    // DRAW DATA POINTS
-    // ============================================
-    
-    for (let i = 0; i < categories.length; i++) {
-        const value = values[i] || 0;
-        const r = radius * Math.min(value, 1);
-        const angle = (Math.PI * 2 * i / categories.length) - Math.PI / 2;
-        const x = centerX + r * Math.cos(angle);
-        const y = centerY + r * Math.sin(angle);
+    // Draw data points
+    for (var m = 0; m < categories.length; m++) {
+        var value2 = values[m] || 0;
+        var r3 = radius * Math.min(value2, 1);
+        var angle4 = (Math.PI * 2 * m / categories.length) - Math.PI / 2;
+        var x3 = centerX + r3 * Math.cos(angle4);
+        var y3 = centerY + r3 * Math.sin(angle4);
         
-        // Draw point with glow
-        ctx.shadowColor = colors[i];
+        ctx.shadowColor = colors[m];
         ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(x, y, 7, 0, Math.PI * 2);
-        ctx.fillStyle = colors[i];
+        ctx.arc(x3, y3, 7, 0, Math.PI * 2);
+        ctx.fillStyle = colors[m];
         ctx.fill();
         ctx.shadowBlur = 0;
         
-        // White border
         ctx.beginPath();
-        ctx.arc(x, y, 7, 0, Math.PI * 2);
+        ctx.arc(x3, y3, 7, 0, Math.PI * 2);
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        // Draw percentage value near point
-        const percent = Math.round(value * 100);
+        var percent = Math.round(value2 * 100);
         ctx.fillStyle = '#2C3E50';
         ctx.font = 'bold 10px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
-        const labelR = r + 18;
-        const labelX = centerX + labelR * Math.cos(angle);
-        const labelY = centerY + labelR * Math.sin(angle);
-        ctx.fillText(`${percent}%`, labelX, labelY);
+        var labelR = r3 + 18;
+        var labelX2 = centerX + labelR * Math.cos(angle4);
+        var labelY2 = centerY + labelR * Math.sin(angle4);
+        ctx.fillText(percent + '%', labelX2, labelY2);
     }
     
-    // ============================================
-    // DRAW CENTER POINT
-    // ============================================
-    
+    // Center point
     ctx.beginPath();
     ctx.arc(centerX, centerY, 3, 0, Math.PI * 2);
     ctx.fillStyle = '#8A9AA8';
     ctx.fill();
     
-    // ============================================
-    // ADD TITLE
-    // ============================================
-    
+    // Title
     ctx.fillStyle = '#2C3E50';
     ctx.font = 'bold 13px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillText('📊 Soft Skills Radar Chart', centerX, height - 10);
+    ctx.fillText('Soft Skills Radar Chart', centerX, height - 10);
     
-    // ============================================
-    // DRAW LEGEND
-    // ============================================
+    // Legend
+    var legendX = 15;
+    var legendY = 15;
+    var legendSpacing = 18;
     
-    const legendX = 15;
-    const legendY = 15;
-    const legendSpacing = 18;
-    
-    categories.forEach((cat, i) => {
-        const yPos = legendY + i * legendSpacing;
+    categories.forEach(function(cat, idx) {
+        var yPos = legendY + idx * legendSpacing;
         
-        // Color box
-        ctx.fillStyle = colors[i];
+        ctx.fillStyle = colors[idx];
         ctx.shadowBlur = 0;
         ctx.fillRect(legendX, yPos, 12, 12);
         ctx.strokeStyle = '#D0D8E0';
         ctx.lineWidth = 1;
         ctx.strokeRect(legendX, yPos, 12, 12);
         
-        // Label
         ctx.fillStyle = '#4A5A6A';
         ctx.font = '10px sans-serif';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`${cat}: ${Math.round(values[i] * 100)}%`, legendX + 16, yPos + 6);
+        ctx.fillText(cat + ': ' + Math.round(values[idx] * 100) + '%', legendX + 16, yPos + 6);
     });
 }
 
@@ -228,17 +190,15 @@ function drawRadarChart() {
 // ============================================
 
 function animateChart() {
-    const canvas = document.getElementById('resultsChart');
+    var canvas = document.getElementById('resultsChart');
     if (!canvas) return;
     
-    // Draw initial chart
     drawRadarChart();
     
-    // Add fade-in animation
     canvas.style.opacity = '0';
     canvas.style.transition = 'opacity 0.8s ease';
     
-    setTimeout(() => {
+    setTimeout(function() {
         canvas.style.opacity = '1';
     }, 200);
 }
@@ -249,11 +209,9 @@ function animateChart() {
 
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('resultsChart')) {
-        // Wait for results to load
         setTimeout(animateChart, 500);
         
-        // Redraw on window resize
-        let resizeTimeout;
+        var resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(drawRadarChart, 300);
@@ -261,5 +219,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Export for use in results page
 window.drawRadarChart = drawRadarChart;
