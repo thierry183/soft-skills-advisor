@@ -3,7 +3,7 @@
 // ============================================
 
 // ============================================
-// QUIZ DATA  Questions (10Regular + 3 Media)
+// QUIZ DATA - Questions (10 Regular + 3 Media)
 // ============================================
 
 const quizQuestions = [
@@ -170,7 +170,6 @@ const quizQuestions = [
         category: 'Communication',
         question: 'Click the letter that represents your communication style:',
         type: 'hotspot',
-        
         image: 'assets/pic.jpg',
         hotspots: [
             { x: 20, y: 30, label: 'A', text: 'Presenting to large groups', score: { Communication: 10, Leadership: 8 } },
@@ -189,13 +188,12 @@ const quizQuestions = [
         category: 'Communication',
         question: 'Listen to the audio carefully and select good answer:',
         type: 'audio',
-       
         audio: 'assets/audio.m4a',
         options: [
             'The speaker is confident and clear',
-            'the speaker"s voice is a bit nervous but well-prepared',
+            'the speaker\'s voice is a bit nervous but well-prepared',
             'The speaker is disorganized',
-            ' This speaker did not prepare and he is struggling to deliver'
+            'This speaker did not prepare and he is struggling to deliver'
         ],
         scores: {
             'Communication': 10,
@@ -204,22 +202,20 @@ const quizQuestions = [
     },
     
     // ============================================
-    // INTERACTIVE MEDIA QUESTION 3: VIDEO
+    // INTERACTIVE MEDIA QUESTION 3: VIDEO (SIMPLE)
     // ============================================
     {
         id: 13,
         category: 'Critical Thinking',
         question: 'Watch the video and answer the question:',
         type: 'video',
-       
-        video: 'assets/vid.mp4',
-        pauseAt: 120, // pause around 2 minutes
-        videoQuestion: 'What is being practiced in this video ?',
+        video: 'assets/v.mp4',
+        videoQuestion: 'What is being practiced in this video?',
         options: [
             'Taking immediate action to resolve the issue',
             'Consulting with the team to see how the conflict can be solved',
-            'only shouting to one another',
-            ' asking for off to recover from conflict'
+            'Only shouting at one another',
+            'Asking for time off to recover from conflict'
         ],
         scores: {
             'Critical Thinking': 10,
@@ -628,7 +624,7 @@ function renderAudioQuestion(question) {
 }
 
 /**
- * Render a video question
+ * Render a video question - SIMPLE VERSION
  */
 function renderVideoQuestion(question) {
     var container = document.getElementById('mediaSection');
@@ -636,40 +632,30 @@ function renderVideoQuestion(question) {
     
     container.innerHTML = `
         <div class="media-container">
-            <h3>Watch the video (it will pause automatically)</h3>
+            <h3>Watch the video</h3>
             <video id="videoPlayer" src="${question.video}" controls style="width: 100%; max-width: 600px; border-radius: 8px;"></video>
             <div id="videoStatus" style="margin-top: 0.5rem; font-weight: 600; color: var(--text-medium);">
-                Watch the video, it will pause at ${question.pauseAt} seconds
-            </div>
-            <div id="videoQuestionContainer" style="display: none; margin-top: 1rem;">
-                <p style="font-weight: 600; color: var(--text-dark);">${question.videoQuestion}</p>
+                Click play to watch the video
             </div>
         </div>
     `;
     
     var video = document.getElementById('videoPlayer');
     var status = document.getElementById('videoStatus');
-    var questionContainer = document.getElementById('videoQuestionContainer');
-    var hasPaused = false;
-    
-    video.addEventListener('timeupdate', function() {
-        if (this.currentTime >= question.pauseAt && !hasPaused) {
-            this.pause();
-            hasPaused = true;
-            status.textContent = 'Video paused - Answer the question below';
-            status.style.color = '#C47A7A';
-            questionContainer.style.display = 'block';
-            showNotification('Video paused! Answer the question below.', 'info');
-        }
-    });
     
     video.addEventListener('play', function() {
-        if (hasPaused && this.currentTime >= question.pauseAt) {
-            hasPaused = false;
-            questionContainer.style.display = 'none';
-            status.textContent = 'Watching again...';
-            status.style.color = '#5B7B8A';
-        }
+        status.textContent = 'Watching video...';
+        status.style.color = '#5B7B8A';
+    });
+    
+    video.addEventListener('pause', function() {
+        status.textContent = 'Video paused';
+        status.style.color = '#B8986A';
+    });
+    
+    video.addEventListener('ended', function() {
+        status.textContent = 'Video finished - Select your answer below';
+        status.style.color = '#5D8A7A';
     });
 }
 

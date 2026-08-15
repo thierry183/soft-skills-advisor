@@ -8,7 +8,7 @@
 
 const regexPatterns = {
     // Student email: student.id@bse.ac.mu
-    studentEmail: /^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@bse\.ac\.mu$/,
+    studentEmail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     
     // Full name: Letters and spaces only, 2-50 chars
     fullName: /^[a-zA-Z\s]{2,50}$/,
@@ -20,7 +20,7 @@ const regexPatterns = {
     phoneNumber: /^\+[0-9][0-9][0-9]\s?[5-9]\d{3}\s?\d{4}$/,
     
     // General email
-    contactEmail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+   contactEmail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     
     // Subject: 3-100 chars
     subject: /^.{3,100}$/,
@@ -86,10 +86,10 @@ function setupRegistrationValidation() {
     
     if (studentEmail) {
         studentEmail.addEventListener('input', function() {
-            validateField(this, regexPatterns.studentEmail, 'Use: student.id@bse.ac.mu');
+         validateField(this, regexPatterns.studentEmail, 'Use: name@example.com');
         });
         studentEmail.addEventListener('blur', function() {
-            validateField(this, regexPatterns.studentEmail, 'Use: student.id@bse.ac.mu');
+            validateField(this, regexPatterns.studentEmail, 'Use: valid email');
         });
     }
     
@@ -116,7 +116,7 @@ function setupRegistrationValidation() {
         e.preventDefault();
         
         const isNameValid = validateField(fullName, regexPatterns.fullName, 'Enter a valid name');
-        const isEmailValid = validateField(studentEmail, regexPatterns.studentEmail, 'Enter a valid BSE email');
+        const isEmailValid = validateField(studentEmail, regexPatterns.studentEmail, 'use a valid email');
         const isIdValid = validateField(studentId, regexPatterns.studentId, 'Use: BSE-2024-001');
         const isPhoneValid = validateField(phoneNumber, regexPatterns.phoneNumber, 'Use: +230 5XXX XXXX');
         

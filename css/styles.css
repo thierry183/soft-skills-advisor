@@ -948,3 +948,61 @@ footer p {
         min-width: auto;
     }
 }
+
+/* ============================================
+   GO UP BUTTON - Secondary Style, Small Size
+   ============================================ */
+
+.go-up-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 30px;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    background: var(--white);
+    color: var(--text-medium);
+    border: 2px solid var(--grey-border);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.go-up-btn:hover {
+    background: var(--grey-bg);
+    border-color: var(--grey-medium);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.go-up-btn:active {
+    transform: scale(0.95);
+}
+
+.go-up-btn.show {
+    display: flex;
+}
+
+/* Mobile responsive for Go Up Button */
+@media (max-width: 768px) {
+    .go-up-btn {
+        bottom: 70px;
+        right: 20px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .go-up-btn {
+        bottom: 60px;
+        right: 15px;
+        padding: 5px 10px;
+        font-size: 0.7rem;
+    }
+}
