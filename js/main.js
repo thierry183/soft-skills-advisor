@@ -69,3 +69,29 @@ function getFromStorage(key) {
 function clearFromStorage(key) {
     localStorage.removeItem(key);
 }
+// ============================================
+// GO UP BUTTON - Show/Hide and Scroll
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    var goUpBtn = document.getElementById('goUpBtn');
+    
+    if (goUpBtn) {
+        // Show button when scrolled down 300px
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                goUpBtn.classList.add('show');
+            } else {
+                goUpBtn.classList.remove('show');
+            }
+        });
+        
+        // Scroll to top when clicked
+        goUpBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+});
